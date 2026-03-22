@@ -11,7 +11,6 @@ from app.services.pdf import build_pdf
 router = APIRouter(tags=["Results"])
 
 
-# ── Enter Results (Teacher) ───────────────────────────────────────────────────
 
 @router.post("/results", response_model=ResultOut, status_code=201)
 async def enter_result(data: ResultIn, db: AsyncSession = Depends(get_db),
@@ -43,7 +42,6 @@ async def enter_bulk(data: BulkResultIn, db: AsyncSession = Depends(get_db),
     return Msg(message=f"{count} result(s) saved successfully")
 
 
-# ── Publish / Unpublish (Admin only) ─────────────────────────────────────────
 
 @router.post("/terms/{term_id}/publish", response_model=Msg)
 async def publish_results(term_id: int, db: AsyncSession = Depends(get_db),
@@ -59,13 +57,11 @@ async def unpublish_results(term_id: int, db: AsyncSession = Depends(get_db),
     return Msg(message="Results unpublished.")
 
 
-# ── View Results ──────────────────────────────────────────────────────────────
 
 @router.get("/students/{student_id}/results/{term_id}")
 async def view_results(student_id: int, term_id: int,
                        db: AsyncSession = Depends(get_db),
                        current_user: User = Depends(get_current_user)):
-    # students can only see their own results
     if current_user.role == Role.STUDENT:
         my = (await db.execute(select(Student).where(Student.user_id == current_user.id))).scalar_one_or_none()
         if not my or my.id != student_id:
@@ -90,7 +86,6 @@ async def view_results(student_id: int, term_id: int,
     ]
 
 
-# ── Report Card (JSON) ────────────────────────────────────────────────────────
 
 @router.get("/students/{student_id}/report-card/{term_id}", response_model=ReportCardOut)
 async def report_card(student_id: int, term_id: int,
@@ -106,7 +101,6 @@ async def report_card(student_id: int, term_id: int,
     return data
 
 
-# ── Report Card PDF Download ──────────────────────────────────────────────────
 
 @router.get("/students/{student_id}/report-card/{term_id}/pdf")
 async def report_card_pdf(student_id: int, term_id: int,
@@ -126,7 +120,6 @@ async def report_card_pdf(student_id: int, term_id: int,
                     headers={"Content-Disposition": f"attachment; filename={filename}"})
 
 
-# ── Affective Domain ──────────────────────────────────────────────────────────
 
 @router.post("/affective", response_model=AffectiveOut, status_code=201)
 async def enter_affective(data: AffectiveIn, db: AsyncSession = Depends(get_db),
@@ -135,13 +128,11 @@ async def enter_affective(data: AffectiveIn, db: AsyncSession = Depends(get_db),
     return record
 
 
-# ── Analytics ─────────────────────────────────────────────────────────────────
 
 @router.get("/analytics")
 async def analytics(academic_year_id: int, class_level: str, term_id: int,
                     db: AsyncSession = Depends(get_db),
                     _: User = Depends(only_teacher)):
-    # students in this class/year
     enrollment_rows = (await db.execute(
         select(ClassEnrollment.student_id).where(
             ClassEnrollment.academic_year_id == academic_year_id,
@@ -152,7 +143,6 @@ async def analytics(academic_year_id: int, class_level: str, term_id: int,
     if not student_ids:
         return {"message": "No students found", "total_students": 0}
 
-    # unique subjects for this term + class
     subject_rows = (await db.execute(
         select(Subject).join(Result, Result.subject_id == Subject.id)
         .where(Result.term_id == term_id, Result.student_id.in_(student_ids))
@@ -188,7 +178,6 @@ async def analytics(academic_year_id: int, class_level: str, term_id: int,
             "lowest":        float(lowest or 0),
         })
 
-    # overall class average
     all_avgs = [s["average"] for s in subject_stats]
     class_avg = round(sum(all_avgs) / len(all_avgs), 2) if all_avgs else 0
 
