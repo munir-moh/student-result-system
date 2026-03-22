@@ -16,8 +16,6 @@ def gen_admin_id(year: int, count: int) -> str:
     return f"ADM/{year}/{count:04d}"
 
 
-# ── Admins ────────────────────────────────────────────────────────────────────
-
 @router.post("/admins", response_model=AdminOut, status_code=201)
 async def create_admin(data: AdminIn, db: AsyncSession = Depends(get_db),
                        _: User = Depends(only_admin)):
@@ -43,8 +41,6 @@ async def list_admins(db: AsyncSession = Depends(get_db), _: User = Depends(only
                      phone=a.phone, is_active=u.is_active) for a, u in rows]
 
 
-# ── Subjects ──────────────────────────────────────────────────────────────────
-
 @router.post("/subjects", response_model=SubjectOut, status_code=201)
 async def create_subject(data: SubjectIn, db: AsyncSession = Depends(get_db),
                          _: User = Depends(only_admin)):
@@ -68,8 +64,6 @@ async def delete_subject(subject_id: int, db: AsyncSession = Depends(get_db),
     s.is_active = False
     return Msg(message="Subject deactivated")
 
-
-# ── Academic Years ────────────────────────────────────────────────────────────
 
 @router.post("/academic-years", response_model=AcademicYearOut, status_code=201)
 async def create_year(data: AcademicYearIn, db: AsyncSession = Depends(get_db),
@@ -100,7 +94,6 @@ async def set_current_year(year_id: int, db: AsyncSession = Depends(get_db),
     return y
 
 
-# ── Terms ─────────────────────────────────────────────────────────────────────
 
 @router.post("/terms", response_model=TermOut, status_code=201)
 async def create_term(data: TermIn, db: AsyncSession = Depends(get_db),
