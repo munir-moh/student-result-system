@@ -1,0 +1,549 @@
+{
+  "info": {
+    "name": "School Result Management System",
+    "description": "Complete API collection for the School Result Management System. \n\n**Setup:**\n1. Set the `base_url` variable to `http://localhost:8000`\n2. Login via POST /api/auth/login\n3. The `access_token` is automatically saved to collection variables\n4. All subsequent requests use it automatically",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url",     "value": "http://localhost:8000", "type": "string" },
+    { "key": "access_token", "value": "",                      "type": "string" },
+    { "key": "refresh_token","value": "",                      "type": "string" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{access_token}}", "type": "string" }]
+  },
+  "item": [
+
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var json = pm.response.json();",
+                "if (json.access_token) {",
+                "  pm.collectionVariables.set('access_token', json.access_token);",
+                "  pm.collectionVariables.set('refresh_token', json.refresh_token);",
+                "  console.log('Tokens saved. Role:', json.role);",
+                "}"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@school.com\",\n  \"password\": \"Admin@12345\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/auth/login", "host": ["{{base_url}}"], "path": ["api","auth","login"] }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/refresh?refresh_token={{refresh_token}}",
+              "host": ["{{base_url}}"],
+              "path": ["api","auth","refresh"],
+              "query": [{ "key": "refresh_token", "value": "{{refresh_token}}" }]
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"old_password\": \"Admin@12345\",\n  \"new_password\": \"MyNewPassword123\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/auth/change-password", "host": ["{{base_url}}"], "path": ["api","auth","change-password"] }
+          }
+        },
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/auth/me", "host": ["{{base_url}}"], "path": ["api","auth","me"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Admin — Admins",
+      "item": [
+        {
+          "name": "Create Admin",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"vice@school.com\",\n  \"first_name\": \"Emeka\",\n  \"last_name\": \"Obi\",\n  \"phone\": \"+2348012345678\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/admin/admins", "host": ["{{base_url}}"], "path": ["api","admin","admins"] }
+          }
+        },
+        {
+          "name": "List Admins",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/admin/admins", "host": ["{{base_url}}"], "path": ["api","admin","admins"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Admin — Subjects",
+      "item": [
+        {
+          "name": "Create Subject",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Mathematics\",\n  \"code\": \"MTH\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/admin/subjects", "host": ["{{base_url}}"], "path": ["api","admin","subjects"] }
+          }
+        },
+        {
+          "name": "Create Subject — English",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"English Language\",\n  \"code\": \"ENG\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/admin/subjects", "host": ["{{base_url}}"], "path": ["api","admin","subjects"] }
+          }
+        },
+        {
+          "name": "Create Subject — Physics",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Physics\",\n  \"code\": \"PHY\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/admin/subjects", "host": ["{{base_url}}"], "path": ["api","admin","subjects"] }
+          }
+        },
+        {
+          "name": "Create Subject — Chemistry",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Chemistry\",\n  \"code\": \"CHE\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/admin/subjects", "host": ["{{base_url}}"], "path": ["api","admin","subjects"] }
+          }
+        },
+        {
+          "name": "Create Subject — Biology",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Biology\",\n  \"code\": \"BIO\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/admin/subjects", "host": ["{{base_url}}"], "path": ["api","admin","subjects"] }
+          }
+        },
+        {
+          "name": "List Subjects",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/admin/subjects", "host": ["{{base_url}}"], "path": ["api","admin","subjects"] }
+          }
+        },
+        {
+          "name": "Delete Subject",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/admin/subjects/1", "host": ["{{base_url}}"], "path": ["api","admin","subjects","1"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Admin — Academic Years",
+      "item": [
+        {
+          "name": "Create Academic Year",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"2024/2025\",\n  \"is_current\": true\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/admin/academic-years", "host": ["{{base_url}}"], "path": ["api","admin","academic-years"] }
+          }
+        },
+        {
+          "name": "List Academic Years",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/admin/academic-years", "host": ["{{base_url}}"], "path": ["api","admin","academic-years"] }
+          }
+        },
+        {
+          "name": "Set Current Academic Year",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/admin/academic-years/1/set-current", "host": ["{{base_url}}"], "path": ["api","admin","academic-years","1","set-current"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Admin — Terms",
+      "item": [
+        {
+          "name": "Create Term — First",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"academic_year_id\": 1,\n  \"name\": \"First\",\n  \"is_current\": true\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/admin/terms", "host": ["{{base_url}}"], "path": ["api","admin","terms"] }
+          }
+        },
+        {
+          "name": "Create Term — Second",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"academic_year_id\": 1,\n  \"name\": \"Second\",\n  \"is_current\": false\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/admin/terms", "host": ["{{base_url}}"], "path": ["api","admin","terms"] }
+          }
+        },
+        {
+          "name": "Create Term — Third",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"academic_year_id\": 1,\n  \"name\": \"Third\",\n  \"is_current\": false\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/admin/terms", "host": ["{{base_url}}"], "path": ["api","admin","terms"] }
+          }
+        },
+        {
+          "name": "List Terms",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/terms?academic_year_id=1",
+              "host": ["{{base_url}}"],
+              "path": ["api","admin","terms"],
+              "query": [{ "key": "academic_year_id", "value": "1" }]
+            }
+          }
+        },
+        {
+          "name": "Set Current Term",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/admin/terms/1/set-current", "host": ["{{base_url}}"], "path": ["api","admin","terms","1","set-current"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Teachers",
+      "item": [
+        {
+          "name": "Register Teacher",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.ade@school.com\",\n  \"first_name\": \"John\",\n  \"last_name\": \"Ade\",\n  \"phone\": \"+2348012345678\",\n  \"gender\": \"Male\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/teachers", "host": ["{{base_url}}"], "path": ["api","teachers"] }
+          }
+        },
+        {
+          "name": "List Teachers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/teachers", "host": ["{{base_url}}"], "path": ["api","teachers"] }
+          }
+        },
+        {
+          "name": "Get Teacher by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/teachers/1", "host": ["{{base_url}}"], "path": ["api","teachers","1"] }
+          }
+        },
+        {
+          "name": "Assign Subject to Teacher",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teacher_id\": 1,\n  \"subject_id\": 1\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/teachers/assign-subject", "host": ["{{base_url}}"], "path": ["api","teachers","assign-subject"] }
+          }
+        },
+        {
+          "name": "Unassign Subject from Teacher",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teacher_id\": 1,\n  \"subject_id\": 1\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/teachers/unassign-subject", "host": ["{{base_url}}"], "path": ["api","teachers","unassign-subject"] }
+          }
+        },
+        {
+          "name": "Get Teacher's Subjects",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/teachers/1/subjects", "host": ["{{base_url}}"], "path": ["api","teachers","1","subjects"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Students",
+      "item": [
+        {
+          "name": "Register Student",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"chidi.okafor@school.com\",\n  \"first_name\": \"Chidi\",\n  \"last_name\": \"Okafor\",\n  \"middle_name\": \"Emmanuel\",\n  \"gender\": \"Male\",\n  \"date_of_birth\": \"2008-05-14\",\n  \"class_level\": \"SS1\",\n  \"academic_year_id\": 1,\n  \"arm\": \"A\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/students", "host": ["{{base_url}}"], "path": ["api","students"] }
+          }
+        },
+        {
+          "name": "List Students",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/students?academic_year_id=1&class_level=SS1&page=1&per_page=50",
+              "host": ["{{base_url}}"],
+              "path": ["api","students"],
+              "query": [
+                { "key": "academic_year_id", "value": "1" },
+                { "key": "class_level",      "value": "SS1" },
+                { "key": "page",             "value": "1" },
+                { "key": "per_page",         "value": "50" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Student by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/students/1", "host": ["{{base_url}}"], "path": ["api","students","1"] }
+          }
+        },
+        {
+          "name": "Deactivate Student",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/students/1", "host": ["{{base_url}}"], "path": ["api","students","1"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Results",
+      "item": [
+        {
+          "name": "Enter Single Result",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_id\": 1,\n  \"subject_id\": 1,\n  \"term_id\": 1,\n  \"ca1\": 18,\n  \"ca2\": 15,\n  \"exam\": 52\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/results", "host": ["{{base_url}}"], "path": ["api","results"] }
+          }
+        },
+        {
+          "name": "Enter Bulk Results",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"results\": [\n    { \"student_id\": 1, \"subject_id\": 1, \"term_id\": 1, \"ca1\": 18, \"ca2\": 15, \"exam\": 52 },\n    { \"student_id\": 2, \"subject_id\": 1, \"term_id\": 1, \"ca1\": 14, \"ca2\": 12, \"exam\": 38 },\n    { \"student_id\": 3, \"subject_id\": 1, \"term_id\": 1, \"ca1\": 20, \"ca2\": 19, \"exam\": 58 }\n  ]\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/results/bulk", "host": ["{{base_url}}"], "path": ["api","results","bulk"] }
+          }
+        },
+        {
+          "name": "View Student Results (by term)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/students/1/results/1", "host": ["{{base_url}}"], "path": ["api","students","1","results","1"] }
+          }
+        },
+        {
+          "name": "Publish Results",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/terms/1/publish", "host": ["{{base_url}}"], "path": ["api","terms","1","publish"] }
+          }
+        },
+        {
+          "name": "Unpublish Results",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/terms/1/unpublish", "host": ["{{base_url}}"], "path": ["api","terms","1","unpublish"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Affective Domain",
+      "item": [
+        {
+          "name": "Enter Affective Scores",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_id\": 1,\n  \"term_id\": 1,\n  \"punctuality\": 5,\n  \"neatness\": 4,\n  \"honesty\": 5,\n  \"leadership\": 3,\n  \"sports\": 4,\n  \"arts\": 3,\n  \"verbal_fluency\": 4,\n  \"handling_of_tools\": 3\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/affective", "host": ["{{base_url}}"], "path": ["api","affective"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Report Card",
+      "item": [
+        {
+          "name": "Get Report Card (JSON)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/students/1/report-card/1", "host": ["{{base_url}}"], "path": ["api","students","1","report-card","1"] }
+          }
+        },
+        {
+          "name": "Download Report Card (PDF)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/students/1/report-card/1/pdf", "host": ["{{base_url}}"], "path": ["api","students","1","report-card","1","pdf"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Analytics",
+      "item": [
+        {
+          "name": "Class Analytics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/analytics?academic_year_id=1&class_level=SS1&term_id=1",
+              "host": ["{{base_url}}"],
+              "path": ["api","analytics"],
+              "query": [
+                { "key": "academic_year_id", "value": "1" },
+                { "key": "class_level",      "value": "SS1" },
+                { "key": "term_id",          "value": "1" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Root",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/", "host": ["{{base_url}}"], "path": [""] }
+          }
+        },
+        {
+          "name": "Health Check",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/health", "host": ["{{base_url}}"], "path": ["health"] }
+          }
+        }
+      ]
+    }
+
+  ]
+}
