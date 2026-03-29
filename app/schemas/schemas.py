@@ -8,7 +8,6 @@ from app.models.models import Role, Term, ClassLevel, Gender
 class Msg(BaseModel):
     message: str
 
-# ── Auth ──────────────────────────────────────────────────────────────────────
 
 class LoginIn(BaseModel):
     email: EmailStr
@@ -25,7 +24,6 @@ class ChangePasswordIn(BaseModel):
     old_password: str
     new_password: str = Field(min_length=6)
 
-# ── Admin ─────────────────────────────────────────────────────────────────────
 
 class AdminIn(BaseModel):
     email: EmailStr
@@ -44,7 +42,6 @@ class AdminOut(BaseModel):
     class Config:
         from_attributes = True
 
-# ── Teacher ───────────────────────────────────────────────────────────────────
 
 class TeacherIn(BaseModel):
     email: EmailStr
@@ -70,7 +67,6 @@ class AssignSubjectIn(BaseModel):
     teacher_id: int
     subject_id: int
 
-# ── Subject ───────────────────────────────────────────────────────────────────
 
 class SubjectIn(BaseModel):
     name: str
@@ -84,7 +80,6 @@ class SubjectOut(BaseModel):
     class Config:
         from_attributes = True
 
-# ── Academic Year ─────────────────────────────────────────────────────────────
 
 class AcademicYearIn(BaseModel):
     name: str = Field(pattern=r"^\d{4}/\d{4}$", examples=["2024/2025"])
@@ -97,7 +92,6 @@ class AcademicYearOut(BaseModel):
     class Config:
         from_attributes = True
 
-# ── Term ──────────────────────────────────────────────────────────────────────
 
 class TermIn(BaseModel):
     academic_year_id: int
@@ -114,8 +108,6 @@ class TermOut(BaseModel):
     published_at: Optional[datetime]
     class Config:
         from_attributes = True
-
-# ── Student ───────────────────────────────────────────────────────────────────
 
 class StudentIn(BaseModel):
     email: EmailStr
@@ -155,7 +147,6 @@ class StudentListOut(BaseModel):
     class Config:
         from_attributes = True
 
-# ── Result ────────────────────────────────────────────────────────────────────
 
 class ResultIn(BaseModel):
     student_id: int
@@ -185,7 +176,6 @@ class ResultOut(BaseModel):
     class Config:
         from_attributes = True
 
-# ── Affective Domain ──────────────────────────────────────────────────────────
 
 class AffectiveIn(BaseModel):
     student_id: int
@@ -214,7 +204,6 @@ class AffectiveOut(BaseModel):
     class Config:
         from_attributes = True
 
-# ── Report Card ───────────────────────────────────────────────────────────────
 
 class SubjectRow(BaseModel):
     subject_name: str

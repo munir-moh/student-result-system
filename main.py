@@ -8,7 +8,6 @@ from app.api.router import router
 
 
 async def create_first_admin():
-    """Create the super admin account on first run if none exists."""
     from app.core.database import SessionLocal
     from app.core.security import hash_password
     from app.models.models import User, Admin, Role
@@ -21,7 +20,7 @@ async def create_first_admin():
             if exists:
                 return
 
-            print("🔧 Creating first super admin...")
+            print("Creating first super admin...")
             user = User(
                 email=settings.FIRST_ADMIN_EMAIL,
                 hashed_password=hash_password(settings.FIRST_ADMIN_PASSWORD),
@@ -39,21 +38,19 @@ async def create_first_admin():
             )
             db.add(admin)
             await db.commit()
-            print(f"✅ Admin created → Email: {settings.FIRST_ADMIN_EMAIL}  Password: {settings.FIRST_ADMIN_PASSWORD}")
-            print("   ⚠️  Change this password after first login!")
+            print(f"Admin created → Email: {settings.FIRST_ADMIN_EMAIL}  Password: {settings.FIRST_ADMIN_PASSWORD}")
+            print(" Change this password after first login!")
         except Exception as e:
             await db.rollback()
-            print(f"❌ Could not create admin: {e}")
+            print(f"Could not create admin: {e}")
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: create tables + seed admin
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     await create_first_admin()
     yield
-    # Shutdown: close DB pool
     await engine.dispose()
 
 
@@ -66,7 +63,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],   # Lock this down to your frontend URL in production
+    allow_origins=["*"],   
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

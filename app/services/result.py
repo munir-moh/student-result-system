@@ -17,7 +17,6 @@ def ordinal(n: int) -> str:
 
 
 async def save_result(db: AsyncSession, data: ResultIn, teacher: Teacher) -> Result:
-    # teacher must be assigned to this subject
     assigned = (await db.execute(select(SubjectAssignment).where(
         SubjectAssignment.teacher_id == teacher.id,
         SubjectAssignment.subject_id == data.subject_id,
@@ -25,7 +24,6 @@ async def save_result(db: AsyncSession, data: ResultIn, teacher: Teacher) -> Res
     if not assigned:
         raise HTTPException(403, "You are not assigned to this subject")
 
-    # term must exist and not be published
     term = (await db.execute(select(TermRecord).where(TermRecord.id == data.term_id))).scalar_one_or_none()
     if not term: raise HTTPException(404, "Term not found")
     if term.result_published:
@@ -37,7 +35,6 @@ async def save_result(db: AsyncSession, data: ResultIn, teacher: Teacher) -> Res
     total = round(data.ca1 + data.ca2 + data.exam, 2)
     grade, remark, is_pass = get_grade(total)
 
-    # upsert
     existing = (await db.execute(select(Result).where(
         Result.student_id == data.student_id,
         Result.subject_id == data.subject_id,
@@ -98,7 +95,6 @@ async def get_report_data(db: AsyncSession, student_id: int, term_id: int, check
 
     year_obj = (await db.execute(select(AcademicYear).where(AcademicYear.id == term.academic_year_id))).scalar_one_or_none()
 
-    # results for this student/term
     rows = (await db.execute(
         select(Result, Subject)
         .join(Subject, Subject.id == Result.subject_id)
@@ -115,7 +111,6 @@ async def get_report_data(db: AsyncSession, student_id: int, term_id: int, check
 
     average = round(grand_total / len(subjects), 2) if subjects else 0
 
-    # class position
     class_level = enrollment.class_level if enrollment else None
     position_str = "N/A"
     class_size = 0

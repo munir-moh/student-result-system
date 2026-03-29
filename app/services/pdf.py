@@ -21,7 +21,6 @@ def build_pdf(data: dict) -> bytes:
     sub   = ParagraphStyle("s", fontSize=10, fontName="Helvetica",      alignment=TA_CENTER)
     els   = []
 
-    # Header
     els += [
         Paragraph(settings.SCHOOL_NAME.upper(),
                   ParagraphStyle("h", fontSize=16, fontName="Helvetica-Bold", alignment=TA_CENTER, spaceAfter=4)),
@@ -33,7 +32,6 @@ def build_pdf(data: dict) -> bytes:
         Spacer(1, 0.4*cm),
     ]
 
-    # Student info
     info = [
         [Paragraph("<b>Name:</b>", bold),          Paragraph(data["student_name"], plain),
          Paragraph("<b>Student ID:</b>", bold),     Paragraph(data["student_id"], plain)],
@@ -55,7 +53,6 @@ def build_pdf(data: dict) -> bytes:
     ]))
     els += [t, Spacer(1, 0.4*cm)]
 
-    # Results table
     els.append(Paragraph("<b>ACADEMIC PERFORMANCE</b>",
                          ParagraphStyle("rh", fontSize=10, fontName="Helvetica-Bold", spaceAfter=4)))
     rows = [["Subject", "CA1\n(20)", "CA2\n(20)", "Exam\n(60)", "Total\n(100)", "Grade", "Remark", "Status"]]
@@ -92,7 +89,6 @@ def build_pdf(data: dict) -> bytes:
     ]))
     els += [rt, Spacer(1, 0.4*cm)]
 
-    # Affective domain
     aff = data.get("affective")
     if aff:
         els.append(Paragraph("<b>AFFECTIVE / PSYCHOMOTOR DOMAIN</b>",
@@ -119,7 +115,6 @@ def build_pdf(data: dict) -> bytes:
         ]))
         els += [at, Spacer(1, 0.4*cm)]
 
-    # Comment + signatures
     ct = Table([
         [Paragraph("<b>Comment:</b>", bold), Paragraph(data["comment"], plain)]
     ], colWidths=[3*cm, 15*cm])

@@ -51,7 +51,6 @@ async def list_students(
 @router.get("/{student_id}", response_model=StudentOut)
 async def get_student(student_id: int, db: AsyncSession = Depends(get_db),
                       current_user: User = Depends(get_current_user)):
-    # students can only view themselves
     if current_user.role == Role.STUDENT:
         my = (await db.execute(select(Student).where(Student.user_id == current_user.id))).scalar_one_or_none()
         if not my or my.id != student_id:

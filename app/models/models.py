@@ -13,7 +13,6 @@ class Base(DeclarativeBase):
     pass
 
 
-# ── Enums ─────────────────────────────────────────────────────────────────────
 
 class Role(str, enum.Enum):
     ADMIN   = "admin"
@@ -38,7 +37,6 @@ class Gender(str, enum.Enum):
     FEMALE = "Female"
 
 
-# ── User ──────────────────────────────────────────────────────────────────────
 
 class User(Base):
     __tablename__ = "users"
@@ -56,7 +54,6 @@ class User(Base):
     student: Mapped[Optional["Student"]] = relationship(back_populates="user", uselist=False)
 
 
-# ── Admin ─────────────────────────────────────────────────────────────────────
 
 class Admin(Base):
     __tablename__ = "admins"
@@ -71,7 +68,6 @@ class Admin(Base):
     user: Mapped["User"] = relationship(back_populates="admin")
 
 
-# ── Teacher ───────────────────────────────────────────────────────────────────
 
 class Teacher(Base):
     __tablename__ = "teachers"
@@ -90,7 +86,6 @@ class Teacher(Base):
     assignments: Mapped[List["SubjectAssignment"]] = relationship(back_populates="teacher")
 
 
-# ── Subject ───────────────────────────────────────────────────────────────────
 
 class Subject(Base):
     __tablename__ = "subjects"
@@ -104,7 +99,6 @@ class Subject(Base):
     results:     Mapped[List["Result"]]             = relationship(back_populates="subject")
 
 
-# ── Subject Assignment ────────────────────────────────────────────────────────
 
 class SubjectAssignment(Base):
     __tablename__ = "subject_assignments"
@@ -119,13 +113,12 @@ class SubjectAssignment(Base):
     subject: Mapped["Subject"] = relationship(back_populates="assignments")
 
 
-# ── Academic Year ─────────────────────────────────────────────────────────────
 
 class AcademicYear(Base):
     __tablename__ = "academic_years"
 
     id:         Mapped[int]      = mapped_column(Integer, primary_key=True)
-    name:       Mapped[str]      = mapped_column(String(20), unique=True)  # e.g. 2024/2025
+    name:       Mapped[str]      = mapped_column(String(20), unique=True)  
     is_current: Mapped[bool]     = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
@@ -133,7 +126,6 @@ class AcademicYear(Base):
     enrollments: Mapped[List["ClassEnrollment"]] = relationship(back_populates="academic_year")
 
 
-# ── Term Record ───────────────────────────────────────────────────────────────
 
 class TermRecord(Base):
     __tablename__ = "terms"
@@ -150,7 +142,6 @@ class TermRecord(Base):
     results:       Mapped[List["Result"]]  = relationship(back_populates="term")
 
 
-# ── Student ───────────────────────────────────────────────────────────────────
 
 class Student(Base):
     __tablename__ = "students"
@@ -172,7 +163,6 @@ class Student(Base):
     affective:   Mapped[List["AffectiveDomain"]] = relationship(back_populates="student")
 
 
-# ── Class Enrollment ──────────────────────────────────────────────────────────
 
 class ClassEnrollment(Base):
     __tablename__ = "class_enrollments"
@@ -191,7 +181,6 @@ class ClassEnrollment(Base):
     academic_year: Mapped["AcademicYear"] = relationship(back_populates="enrollments")
 
 
-# ── Result ────────────────────────────────────────────────────────────────────
 
 class Result(Base):
     __tablename__ = "results"
@@ -220,7 +209,6 @@ class Result(Base):
     term:    Mapped["TermRecord"] = relationship(back_populates="results")
 
 
-# ── Affective Domain ──────────────────────────────────────────────────────────
 
 class AffectiveDomain(Base):
     __tablename__ = "affective_domains"

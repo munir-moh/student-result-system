@@ -9,22 +9,18 @@ from app.utils import gen_student_id
 
 
 async def create_student(db: AsyncSession, data: StudentIn) -> tuple:
-    # email must be unique
     exists = await db.execute(select(User).where(User.email == data.email))
     if exists.scalar_one_or_none():
         raise HTTPException(400, "Email already registered")
 
-    # academic year must exist
     yr = await db.execute(select(AcademicYear).where(AcademicYear.id == data.academic_year_id))
     academic_year = yr.scalar_one_or_none()
     if not academic_year:
         raise HTTPException(404, "Academic year not found")
 
-    # generate student ID
     count = (await db.execute(select(func.count()).select_from(Student))).scalar() + 1
     student_id_str = gen_student_id(date.today().year, count)
 
-    # default password = date of birth e.g. 2008-05-14
     default_pw = data.date_of_birth.strftime("%Y-%m-%d")
 
     user = User(email=data.email, hashed_password=hash_password(default_pw),
